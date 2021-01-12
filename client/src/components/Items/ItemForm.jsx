@@ -28,8 +28,7 @@ class ItemForm extends Component {
   formRef = React.createRef();
 
   handleChange = (event) => {
-    const value =
-      event.target.type === "file" ? event.target.files[0] : event.target.value;
+    const value = event.target.value;
     const key = event.target.name;
     this.setState({ [key]: value });
   };
