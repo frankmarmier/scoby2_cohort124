@@ -1,0 +1,36 @@
+.NavMain {
+  position: sticky;
+  z-index: 2;
+  background-color: transparent;
+  left: 0;
+  right: 0;
+  top: 0;
+  color: rgb(57, 57, 57);
+  display: flex;
+  align-items: center;
+  padding: 20px 40px;
+}
+
+.NavMain .logo {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin: 1.2rem;
+  text-shadow: 2px 2px 2px grey;
+  z-index: 1;
+}
+
+.NavMain ul {
+  display: flex;
+  list-style-type: none;
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.NavMain li {
+  cursor: pointer;
+}
+
+.NavMain ul li:not(:last-child) {
+  margin-right: 1.5em;
+}

@@ -1,0 +1,30 @@
+.Btn {
+  background: #5663ff;
+  width: 100%;
+  color: white;
+  padding: 16px 0;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.Btn:active {
+  transform: translate(1px, 1px);
+}
+
+.Btn.btn-primary {
+  background: #5663ff;
+  color: white;
+}
+
+.Btn.btn-primary:disabled {
+  background: rgb(190, 190, 190);
+}
+
+.Btn.btn-secondary {
+  background: white;
+  color: #5663ff;
+  border: 1px solid #5663ff;
+}

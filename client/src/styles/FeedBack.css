@@ -1,0 +1,17 @@
+.FeedBack {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.FeedBack.failure {
+  background-color: rgb(255, 182, 182);
+  color: rgb(255, 58, 58);
+}
+
+.FeedBack.success {
+  background-color: rgb(61, 194, 0);
+  color: white;
+}

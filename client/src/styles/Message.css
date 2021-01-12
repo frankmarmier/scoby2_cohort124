@@ -1,0 +1,32 @@
+.Message {
+  display: flex;
+  flex-direction: row;
+  padding: 15px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+.Message .icon {
+  margin-right: 8px;
+}
+
+.Message.info {
+  color: #5663ff;
+  background-color: #f1f2ff;
+}
+
+.Message.info .icon {
+  fill: #5663ff;
+}
+
+.Message.danger {
+  color: rgb(255, 0, 0);
+  background-color: rgb(255, 215, 215);
+}
+
+.Message.danger .icon {
+  fill: rgb(255, 0, 0);
+}
