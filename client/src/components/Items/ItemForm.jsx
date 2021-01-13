@@ -56,8 +56,6 @@ class ItemForm extends Component {
     apiHandler
       .addItem(fd)
       .then((data) => {
-        //clear form
-        this.formRef.current.reset();
         this.props.addItem(data);
         this.setState({
           httpResponse: {
