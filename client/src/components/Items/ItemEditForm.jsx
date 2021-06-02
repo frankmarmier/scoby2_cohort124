@@ -3,14 +3,13 @@ import AutoComplete from "../AutoComplete";
 import UploadWidget from "../UploadWidget";
 import Button from "../Button";
 import Message from "../Message";
-import UserContext from "../Auth/UserContext";
+import withUser from "../Auth/withUser";
 import apiHandler from "../../api/apiHandler";
 import { buildFormData } from "../../utils";
 import FeedBack from "../FeedBack";
 import "../../styles/ItemForm.css";
 
 class ItemEditForm extends Component {
-  static contextType = UserContext;
   state = {
     httpResponse: null,
   };
@@ -70,21 +69,15 @@ class ItemEditForm extends Component {
 
   render() {
     const { httpResponse } = this.state;
-    const {
-      name,
-      category,
-      quantity,
-      location,
-      description,
-      contact,
-    } = this.props.item;
+
+    const { name, category, quantity, location, description, contact } =
+      this.props.item;
 
     return (
       <div className="ItemForm-container">
         <form
           ref={this.formRef}
           className="ItemForm"
-          onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         >
           <p onClick={this.props.handleClose} className="close-link">
@@ -106,14 +99,20 @@ class ItemEditForm extends Component {
               type="text"
               placeholder="What are you giving away ?"
               name="name"
-              defaultValue={name}
+              onChange={this.handleChange}
+              value={name || ""}
             />
           </div>
           <div className="form-group">
             <label className="label" htmlFor="category">
               Category
             </label>
-            <select name="category" id="category" defaultValue={category[0]}>
+            <select
+              name="category"
+              id="category"
+              value={category[0] || ""}
+              onChange={this.handleChange}
+            >
               <option value="Plant">Plant</option>
               <option value="Kombucha">Kombucha</option>
               <option value="Vinegar">Vinegar</option>
@@ -128,7 +127,8 @@ class ItemEditForm extends Component {
               className="input"
               type="number"
               name="quantity"
-              defaultValue={quantity}
+              onChange={this.handleChange}
+              value={quantity || ""}
             />
           </div>
           <div className="form-group">
@@ -149,7 +149,8 @@ class ItemEditForm extends Component {
               id="description"
               className="text-area"
               placeholder="Tell us something about this item"
-              defaultValue={description}
+              onChange={this.handleChange}
+              value={description || ""}
             ></textarea>
           </div>
 
@@ -169,20 +170,21 @@ class ItemEditForm extends Component {
               <input
                 type="radio"
                 name="contact"
-                defaultChecked={contact === this.context.user.email}
-                value={this.context.user.email}
+                onChange={this.handleChange}
+                value={this.props.context.user.email || ""}
               />
-              {this.context.user.email}
+              {this.props.context.user.email}
             </div>
-            {this.context.user.phoneNumber && (
+            {this.props.context.user.phoneNumber && (
               <div>
                 <input
                   type="radio"
                   name="contact"
-                  defaultChecked={contact === this.context.user.phoneNumber}
-                  value={this.context.user.phoneNumber}
+                  onChange={this.handleChange}
+                  checked={contact === this.props.context.user.phoneNumber}
+                  value={this.props.context.user.phoneNumber}
                 />
-                {this.context.user.phoneNumber}
+                {this.props.context.user.phoneNumber}
               </div>
             )}
           </div>
@@ -199,4 +201,4 @@ class ItemEditForm extends Component {
   }
 }
 
-export default ItemEditForm;
+export default withUser(ItemEditForm);

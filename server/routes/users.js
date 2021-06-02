@@ -39,8 +39,8 @@ router.get("/me", requireAuth, (req, res, next) => {
 router.get("/me/items", requireAuth, (req, res, next) => {
   const currentUserId = req.session.currentUser; // We retrieve the users id from the session.
 
-  // And then get all the items matching the id_user field that matches the logged in users id.
-  Item.find({ id_user: currentUserId })
+  // And then get all the items matching the creator field that matches the logged in users id.
+  Item.find({ creator: currentUserId })
     .then((itemDocuments) => {
       res.status(200).json(itemDocuments);
     })

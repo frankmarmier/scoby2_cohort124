@@ -2,11 +2,10 @@ import React from "react";
 import AppMap from "../components/AppMap";
 import ItemDisplay from "../components/Items/ItemDisplay";
 import ItemForm from "../components/Items/ItemForm";
-import UserContext from "../components/Auth/UserContext";
+import withUser from "../components/Auth/withUser";
 import apiHandler from "../api/apiHandler";
 
 class Home extends React.Component {
-  static contextType = UserContext;
   state = {
     selectedItem: null,
     items: [],
@@ -31,7 +30,7 @@ class Home extends React.Component {
   };
 
   render() {
-    const { user } = this.context;
+    const { user } = this.props.context;
 
     return (
       <React.Fragment>
@@ -53,4 +52,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default withUser(Home);

@@ -5,6 +5,12 @@ const User = require("../models/User");
 
 const salt = 10; // Salt for bcrypt's hashing algorithm
 
+/**
+ * All routes in this router are prefixed with:
+ *      -  /api/auth
+ */
+
+//  /api/auth/signin
 router.post("/signin", (req, res, next) => {
   const { email, password } = req.body;
 
@@ -27,11 +33,10 @@ router.post("/signin", (req, res, next) => {
       req.session.currentUser = userDocument._id;
       res.redirect("/api/auth/isLoggedIn");
     })
-    .catch((error) => {
-      res.status(500).json(error);
-    });
+    .catch(next);
 });
 
+//  /api/auth/signup
 router.post("/signup", (req, res, next) => {
   const { email, password, firstName, lastName } = req.body;
   User.findOne({ email })
@@ -48,15 +53,12 @@ router.post("/signup", (req, res, next) => {
           req.session.currentUser = newUserDocument._id;
           res.redirect("/api/auth/isLoggedIn");
         })
-        .catch((error) => {
-          res.status(500).json(error);
-        });
+        .catch(next);
     })
-    .catch((error) => {
-      res.status(500).json(error);
-    });
+    .catch(next);
 });
 
+// /api/auth/isLoggedIn
 router.get("/isLoggedIn", (req, res, next) => {
   if (req.session.currentUser) {
     User.findById(req.session.currentUser)
@@ -64,18 +66,19 @@ router.get("/isLoggedIn", (req, res, next) => {
       .then((userDocument) => {
         res.status(200).json(userDocument);
       })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
+      .catch(next);
   } else {
     res.status(401).json({ message: "Unauthorized" });
   }
 });
 
+//  /api/auth/logout
 router.delete("/logout", (req, res, next) => {
   if (req.session.currentUser) {
     req.session.destroy((err) => {
-      if (err) res.status(500).json(err);
+      if (err) {
+        return next(err);
+      }
       res.sendStatus(204);
     });
   } else {

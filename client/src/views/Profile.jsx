@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
-import UserContext from "../components/Auth/UserContext";
+import withUser from "../components/Auth/withUser";
 import apiHandler from "../api/apiHandler";
 import FeedBack from "../components/FeedBack";
 import CardItem from "../components/Items/CardItem";
@@ -11,8 +11,6 @@ import "../styles/Profile.css";
 import "../styles/form.css";
 
 class Profile extends Component {
-  static contextType = UserContext;
-
   state = {
     phoneNumber: "",
     httpResponse: null,
@@ -21,8 +19,19 @@ class Profile extends Component {
   };
 
   componentDidMount() {
-    apiHandler.getUserItems().then((data) => {
-      this.setState({ userItems: data });
+    const promises = Promise.all([
+      apiHandler.getUserInfos(),
+      apiHandler.getUserItems(),
+    ]);
+
+    promises.then((allPromises) => {
+      const userInfos = allPromises[0];
+      const userItems = allPromises[1];
+
+      this.setState({
+        user: userInfos,
+        userItems: userItems,
+      });
     });
   }
 
@@ -32,7 +41,7 @@ class Profile extends Component {
     apiHandler
       .updateUser(userData)
       .then((data) => {
-        this.context.setUser(data);
+        this.props.context.setUser(data);
         this.setState({
           httpResponse: { status: "success", message: "Phone number added." },
         });
@@ -89,12 +98,11 @@ class Profile extends Component {
   };
 
   componentWillUnmount() {
-    clearTimeout(this.timeoutId);
+    this.timeoutId && clearTimeout(this.timeoutId);
   }
 
   render() {
-    const { user } = this.context;
-    const { httpResponse, userItems, selectedItem } = this.state;
+    const { httpResponse, userItems, selectedItem, user } = this.state;
     if (!user) return null;
 
     return (
@@ -112,6 +120,7 @@ class Profile extends Component {
             addItem={this.addItem}
           />
         )}
+
         <div className="user-image round-image">
           <img src={user.profileImg} alt={user.firstName} />
         </div>
@@ -132,11 +141,7 @@ class Profile extends Component {
               status={httpResponse.status}
             />
           )}
-          <form
-            className="form"
-            onChange={this.handlePhoneNumber}
-            onSubmit={this.submitPhoneNumber}
-          >
+          <form className="form" onSubmit={this.submitPhoneNumber}>
             <div className="form-group">
               <label className="label" htmlFor="phoneNumber">
                 Phone number
@@ -146,7 +151,8 @@ class Profile extends Component {
                 id="phoneNumber"
                 type="text"
                 name="phoneNumber"
-                defaultValue={this.context.user.phoneNumber || ""}
+                onChange={this.handlePhoneNumber}
+                defaultValue={user.phoneNumber || ""}
                 placeholder="Add phone number"
               />
             </div>
@@ -156,7 +162,7 @@ class Profile extends Component {
 
         {!userItems.length && (
           <React.Fragment>
-            <div className="">
+            <div>
               <img src="/media/personal-page-empty-state.svg" alt="" />
             </div>
             <p>You don't have any items :(</p>
@@ -181,4 +187,4 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+export default withUser(Profile);

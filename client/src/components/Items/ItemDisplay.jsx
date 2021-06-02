@@ -18,12 +18,17 @@ const ItemDisplay = ({ item, handleClose }) => {
       <p className="location">{item.formattedAddress}</p>
       <div className="user-info">
         <div className="round-image-user">
-          <img src={item.id_user.profileImg} alt="user" />
+          <img src={item.creator.profileImg} alt="user" />
         </div>
-        <span>Given away by {item.id_user.firstName}</span>
+        <span>Given away by {item.creator.firstName}</span>
       </div>
       <div className="contact-information">
-        Contact {item.id_user.firstName} at <b>{item.contact}</b>
+        Contact {item.creator.firstName} at{" "}
+        <b>
+          {item.contact === "phone"
+            ? item.creator.phoneNumber
+            : item.creator.email}
+        </b>
       </div>
     </div>
   );

@@ -3,29 +3,28 @@ import AutoComplete from "../AutoComplete";
 import UploadWidget from "../UploadWidget";
 import Button from "../Button";
 import Message from "../Message";
-import UserContext from "../Auth/UserContext";
+import withUser from "../Auth/withUser";
 import apiHandler from "../../api/apiHandler";
 import { buildFormData } from "../../utils";
-import "../../styles/ItemForm.css";
 import FeedBack from "../FeedBack";
+import "../../styles/ItemForm.css";
+
+const initialState = {
+  name: "",
+  category: "",
+  quantity: "",
+  location: {
+    coordinates: [],
+  },
+  contact: "email",
+  address: "",
+  description: "",
+  httpResponse: null,
+  error: null,
+};
 
 class ItemForm extends Component {
-  static contextType = UserContext;
-
-  state = {
-    name: "",
-    category: "",
-    quantity: "",
-    location: {
-      coordinates: [],
-    },
-    address: "",
-    description: "",
-    httpResponse: null,
-    error: null,
-  };
-
-  formRef = React.createRef();
+  state = initialState;
 
   handleChange = (event) => {
     const value = event.target.value;
@@ -57,20 +56,29 @@ class ItemForm extends Component {
       .addItem(fd)
       .then((data) => {
         this.props.addItem(data);
+        // this.setState({
+        //   name: "",
+        //   category: "",
+        //   quantity: "",
+        //   location: {
+        //     coordinates: [],
+        //   },
+        //   address: "",
+        //   description: "",
+        //   httpResponse: {
+        //     status: "success",
+        //     message: "Item successfully added.",
+        //   },
+        // });
+
         this.setState({
+          ...initialState,
           httpResponse: {
             status: "success",
             message: "Item successfully added.",
           },
-          name: "",
-          category: "",
-          quantity: "",
-          location: {
-            coordinates: [],
-          },
-          address: "",
-          description: "",
         });
+
         this.timeoutId = setTimeout(() => {
           this.setState({ httpResponse: null });
         }, 1000);
@@ -82,6 +90,7 @@ class ItemForm extends Component {
             message: "An error occured, try again later.",
           },
         });
+
         this.timeoutId = setTimeout(() => {
           this.setState({ httpResponse: null });
         }, 1000);
@@ -95,13 +104,10 @@ class ItemForm extends Component {
 
   render() {
     const { httpResponse, error } = this.state;
+
     return (
       <div className="ItemForm-container">
-        <form
-          ref={this.formRef}
-          className="ItemForm"
-          onSubmit={this.handleSubmit}
-        >
+        <form className="ItemForm" onSubmit={this.handleSubmit}>
           <p onClick={this.props.handleClose} className="close-link">
             X
           </p>
@@ -193,26 +199,26 @@ class ItemForm extends Component {
                 type="radio"
                 name="contact"
                 onChange={this.handleChange}
-                checked={this.state.contact === this.context.user.email}
-                value={this.context.user.email}
+                checked={this.state.contact === "email"}
+                value="email"
               />
-              <label>{this.context.user.email}</label>
+              <label>{this.props.context.user.email}</label>
             </div>
-            {this.context.user.phoneNumber && (
+            {this.props.context.user.phoneNumber && (
               <div>
                 <input
                   type="radio"
                   name="contact"
-                  checked={this.state.contact === this.context.user.phoneNumber}
+                  checked={this.state.contact === "phone"}
                   onChange={this.handleChange}
-                  value={this.context.user.phoneNumber}
+                  value="phone"
                 />
-                <label>{this.context.user.phoneNumber}</label>
+                <label>{this.props.context.user.phoneNumber}</label>
               </div>
             )}
           </div>
 
-          {!this.context.user.phoneNumber && (
+          {!this.props.context.user.phoneNumber && (
             <Message info icon="info">
               Want to be contacted by phone? Add your phone number in your
               personal page.
@@ -226,4 +232,4 @@ class ItemForm extends Component {
   }
 }
 
-export default ItemForm;
+export default withUser(ItemForm);

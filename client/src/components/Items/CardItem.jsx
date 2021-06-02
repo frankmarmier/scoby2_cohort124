@@ -2,15 +2,10 @@ import React from "react";
 import Button from "../Button";
 import "../../styles/CardItem.css";
 
-const CardItem = ({
-  image,
-  name,
-  _id,
-  quantity,
-  description,
-  handleEdit,
-  handleDelete,
-}) => {
+const CardItem = (props) => {
+  const { image, name, _id, quantity, description, handleEdit, handleDelete } =
+    props;
+
   return (
     <div className="CardItem">
       <div className="round-image">

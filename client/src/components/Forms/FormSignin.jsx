@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import UserContext from "../Auth/UserContext";
+import withUser from "../Auth/withUser";
 import apiHandler from "../../api/apiHandler";
 import "../../styles/form.css";
 
 class FormSignin extends Component {
-  static contextType = UserContext;
-
   state = {
     email: "",
     password: "",
@@ -24,7 +22,7 @@ class FormSignin extends Component {
     apiHandler
       .signin(this.state)
       .then((data) => {
-        this.context.setUser(data); // update the context
+        this.props.context.setUser(data); // update the context
       })
       .catch((error) => {
         console.log(error);
@@ -32,7 +30,7 @@ class FormSignin extends Component {
   };
 
   render() {
-    if (this.context.isLoggedIn) {
+    if (this.props.context.isLoggedIn) {
       // This logic is the same as in the <ProtectedRoute /> component
       // Here this is handled within the component, if there are some views
       // that are not meant to be rendered to a logged in user,
@@ -97,4 +95,4 @@ class FormSignin extends Component {
   }
 }
 
-export default FormSignin;
+export default withUser(FormSignin);

@@ -3,12 +3,11 @@ import Button from "../Button";
 import UploadWidget from "../UploadWidget";
 import FeedBack from "../FeedBack";
 import apiHandler from "../../api/apiHandler";
-import UserContext from "../Auth/UserContext";
+import withUser from "../Auth/withUser";
 
 import "../../styles/form.css";
 
 class FormProfile extends Component {
-  static contextType = UserContext;
   state = {
     user: null,
     tmpUrl: "",
@@ -73,7 +72,7 @@ class FormProfile extends Component {
     apiHandler
       .updateUser(fd)
       .then((data) => {
-        this.context.setUser(data);
+        this.props.context.setUser(data);
         this.setState({
           httpResponse: {
             status: "success",
@@ -212,4 +211,4 @@ class FormProfile extends Component {
   }
 }
 
-export default FormProfile;
+export default withUser(FormProfile);

@@ -16,8 +16,12 @@ const itemSchema = new Schema(
         enum: ["Plant", "Kombucha", "Kefir", "Vinegar"],
       },
     ],
-    quantity: Number,
-    contact: String,
+    quantity: { type: Number, min: 1, default: 1 },
+    contact: { type: String, enum: ["phone", "email"] },
+    creator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     location: {
       type: {
         type: String,
@@ -28,12 +32,8 @@ const itemSchema = new Schema(
       },
     },
     formattedAddress: String,
-    id_user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
   },
-  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+  { timestamps: true }
 );
 
 const Item = mongoose.model("Item", itemSchema);
