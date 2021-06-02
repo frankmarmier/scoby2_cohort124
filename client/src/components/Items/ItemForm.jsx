@@ -26,6 +26,8 @@ const initialState = {
 class ItemForm extends Component {
   state = initialState;
 
+  imageRef = React.createRef();
+
   handleChange = (event) => {
     const value = event.target.value;
     const key = event.target.name;
@@ -51,6 +53,8 @@ class ItemForm extends Component {
     const { httpResponse, ...data } = this.state;
     buildFormData(fd, data); // You can find this function in ./src/utils.js
     // Function implemented by user "Vladi Vlad" @stackoverflow : ) => https://stackoverflow.com/a/42241875/13374041
+
+    fd.append("image", this.imageRef.current.files[0]);
 
     apiHandler
       .addItem(fd)
