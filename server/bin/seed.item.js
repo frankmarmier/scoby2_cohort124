@@ -11,7 +11,6 @@ const items = [
     description: "A beautiful Plant",
     category: "Plant",
     quantity: 3,
-    address: "221 Boulevard Voltaire",
     location: {
       coordinates: [48.8566, 2.3522],
     },
@@ -22,10 +21,8 @@ const items = [
   {
     name: "Plant Name2",
     description: "A beautiful Plant2",
-
     category: "Plant",
     quantity: 3,
-    address: "221 Boulevard Voltaire",
     location: {
       coordinates: [48.8566, 2.3522],
     },
@@ -36,10 +33,8 @@ const items = [
   {
     name: "Plant Name3",
     description: "A beautiful Plant3",
-
     category: "Plant",
     quantity: 3,
-    address: "221 Boulevard Voltaire",
     location: {
       coordinates: [48.8566, 2.3522],
     },
@@ -59,9 +54,7 @@ async function seedItems() {
     const usersInDB = await User.find();
 
     items.forEach((item) => {
-      const randomUserIndex = Math.floor(
-        Math.random() * (usersInDB.length - 1 - 0 + 1) + 0
-      );
+      const randomUserIndex = Math.floor(Math.random() * usersInDB.length);
       item.creator = usersInDB[randomUserIndex]._id;
     });
     const createdItems = await Item.create(items);
